@@ -9,7 +9,7 @@ This code enables load testing of the Merritt UI.
 ## Prerequisites
 
 - Install pyenv
-- Install python 3.12+ vi pyenv
+- Install python 3.12+ using pyenv
 - pip install locust
 - pip install bs4
 
