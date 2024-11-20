@@ -1223,7 +1223,7 @@ cat out80.json
 }
 ```
 
-Find actions that took more than 2 seconds (based on 80 percentile response time)
+## Find actions that took more than 2 seconds (based on 80 percentile response time)
 
 ```bash
 jq ". | select(.resp_ms_80pct > 2000)" out80.json 
