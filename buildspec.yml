@@ -6,9 +6,10 @@ phases:
     on-failure: ABORT
     commands:
     - |
-      pip install --upgrade pip
-      pip install locust
-      pip install bs4
+      pip -q install locust
+      pip -q install bs4
+
+      echo "Run 2 minute locust test"
       export MERRITTUSER=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/user --query Parameter.Value --output text)
       export MERRITTPASS=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/password --with-decryption --query Parameter.Value --output text)
       locust --headless -u 10 -t 2m -H https://merritt-stage.cdlib.org --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
@@ -21,8 +22,8 @@ phases:
       jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8 -1])}]" out.json > out80.json
       cat out80.json
 
-      echo "Test for failure"
-      grep -q . fail.json || false
+    - echo "Test for failure"
+    - grep -q . fail.json || false
 
-      echo "Test for response times greater than 2 seconds"
-      jq ". | select(.resp_ms_80pct > 2000)" out80.json | grep -q . || false
+    - echo "Test for response times greater than 2 seconds"
+    - jq ". | select(.resp_ms_80pct > 2000)" out80.json | grep -q . || false
