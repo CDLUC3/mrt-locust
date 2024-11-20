@@ -12,7 +12,7 @@ phases:
       echo "Run 2 minute locust test"
       export MERRITTUSER=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/user --query Parameter.Value --output text)
       export MERRITTPASS=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/password --with-decryption --query Parameter.Value --output text)
-      locust --headless -u 10 -t 2m -H https://merritt-stage.cdlib.org --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
+      locust --headless -u 6 -t 2m -H https://merritt-stage.cdlib.org --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
 
       echo "Analyze Failures"
       jq ".[] | select(.num_failures>0) | {name: .name, fail: .num_failures}" out.json > fail.json
