@@ -15,6 +15,9 @@ class HelloWorldUser(HttpUser):
         if "MERRITTUSER" in os.environ:
           self.client.get("/m/merritt_demo")
           self.client.get("/s/merritt_demo?terms=apple&group=merritt_demo&commit=Go")
+          self.client.get("/m/ark%253A%252F99999%252Ffk4fv08g3k")
+          self.client.get("/m/ark%253A%252F99999%252Ffk4fv08g3k/1")
+          self.client.get("/api/presign-file/ark%253A%252F99999%252Ffk4fv08g3k/1/system%252Fmrt-erc.txt")
         else: 
           self.client.get("/m/merritt_demo_pub")
           self.client.get("/s/merritt_demo_pub?terms=apple&group=merritt_demo_pub&commit=Go")

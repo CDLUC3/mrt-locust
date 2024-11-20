@@ -1,2 +1,7 @@
 .locustfile.py.swp
 __pycache__/locustfile.cpython-312.pyc
+out.csv_exceptions.csv
+out.csv_failures.csv
+out.csv_stats_history.csv
+out.csv_stats.csv
+out.json
