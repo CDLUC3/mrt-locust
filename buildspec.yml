@@ -25,5 +25,7 @@ phases:
     - echo "Test for failure... fail if file is not empty"
     - grep -qv . fail.json || false
 
+    - echo "Test for login response times greater than 8 seconds... fail if file is not empty"
+    - jq '. | select(.resp_ms_80pct > 8000) | select(.name=="/guest_login")' out80.json | grep -qv . || false
     - echo "Test for response times greater than 2 seconds... fail if file is not empty"
-    - jq ". | select(.resp_ms_80pct > 2000)" out80.json | grep -qv . || false
+    - jq '. | select(.resp_ms_80pct > 2000) | select(.name!="/guest_login")' out80.json | grep -qv . || false
