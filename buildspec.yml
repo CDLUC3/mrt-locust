@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+
+  build:
+    on-failure: ABORT
+    commands:
+    - |
+      pip install locust
+      pip install bs4
+      export MERRITTUSER=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/user --query Parameter.Value --output text)
+      export MERRITTPASS=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/password --with-decryption --query Parameter.Value --output text)
+      locust --headless -u 10 -t 3m -H https://merritt-stage.cdlib.org --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
+      jq ".[] | select(.num_failures>0) | {name: .name, fail: .num_failures}" out.json
+      jq ".[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8 -1])}" out.json > out80.json
+      cat out80.json

@@ -22,7 +22,7 @@ CSV has been rendered as a markdown table.
 
 
 ## JSON output
-The JSON ouptput is much more raw
+The JSON ouptput is much more raw.  Note that the request counts do not perfectly match the CSV above.
 ```json
 [
     {

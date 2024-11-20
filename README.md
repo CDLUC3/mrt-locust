@@ -50,3 +50,14 @@ locust
 
 Login: 2.8 / 15.0
 Choose: 1.7 / 15.0
+
+## Tasks
+
+- Count failures
+- Generate 70pct time
+- Generate ??
+- Test times against standard
+    - Login
+    - Search
+    - Browse
+- Is there a way to categorize the requests?
