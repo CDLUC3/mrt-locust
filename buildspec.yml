@@ -22,8 +22,8 @@ phases:
       jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8 -1])}]" out.json > out80.json
       cat out80.json
 
-    - echo "Test for failure"
-    - grep -q . fail.json || false
+    - echo "Test for failure... fail if file is not empty"
+    - grep -qv . fail.json || false
 
-    - echo "Test for response times greater than 2 seconds"
-    - jq ". | select(.resp_ms_80pct > 2000)" out80.json | grep -q . || false
+    - echo "Test for response times greater than 2 seconds... fail if file is not empty"
+    - jq ". | select(.resp_ms_80pct > 2000)" out80.json | grep -qv . || false
