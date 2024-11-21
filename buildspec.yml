@@ -33,8 +33,10 @@ phases:
       export MERRITTUSER=$(aws ssm get-parameter --name ${SSMPATH}/user --query Parameter.Value --output text)
       export MERRITTPASS=$(aws ssm get-parameter --name ${SSMPATH}/password --with-decryption --query Parameter.Value --output text)
 
-    - echo "Run 2 minute locust test"
-    - locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
+    - |
+      echo "Run 2 minute locust test"
+      locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
+      cat out.json
 
     - | 
       echo "Analyze Failures"
@@ -46,8 +48,9 @@ phases:
       jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8 -1])}]" out.json > out80.json
       cat out80.json
 
-    - echo "Test for failure... fail if file is not empty"
-    - if [ -s fail.json ]; then echo FAILURE found; false; fi
+    - |
+      echo "Test for failure... fail if file is not empty"
+      if [ -s fail.json ]; then echo FAILURE found; false; fi
 
     - |
       echo "Test for login response times greater than 8 seconds... fail if file is not empty"
