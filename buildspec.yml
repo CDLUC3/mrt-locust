@@ -6,6 +6,7 @@ phases:
     on-failure: ABORT
     commands:
     - |
+      set +x
       pip -q install locust
       pip -q install bs4
 
@@ -43,11 +44,11 @@ phases:
       echo
       echo "Run 2 minute locust test"
       locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
-      cut -d, -f2,3,4,15 out.csv_stats.csv
+      cat out.json
       echo 
       echo "================"
       echo
-      cat out.json
+      cut -d, -f2,3,4,15 out.csv_stats.csv
 
     - | 
       echo 
