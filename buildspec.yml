@@ -53,7 +53,7 @@ phases:
         echo 
         echo " ** $1"
         echo
-        false
+        grep ERROR /dev/null
       }
 
     - |
