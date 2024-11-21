@@ -4,7 +4,7 @@ This library is part of the [Merritt Preservation System](https://github.com/CDL
 
 ## Purpose
 
-This code enables load testing of the Merritt UI.
+This code enables load testing of the Merritt UI using [Locust](https://locust.io/)
 
 ## Prerequisites
 
@@ -25,39 +25,8 @@ locust
 export MERRITTUSER=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/user --query Parameter.Value --output text)
 export MERRITTPASS=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-stage/password --with-decryption --query Parameter.Value --output text)
 locust
-locust --headless -u 10 -t 1m -H https://merritt-stage.cdlib.org --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
-jq .[] | select(.num_failures>0) | {name: .name, fail: .num_failures}
 ```
 
 
-## Prod Default
-```
-export MERRITTUSER=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-prod/user --query Parameter.Value --output text)
-export MERRITTPASS=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-prod/password --with-decryption --query Parameter.Value --output text)
-locust
-```
-
-Login: 1.459 / 9.6
-Choose: 1.75 / 5.4
-
-
-## Readonly 
-```
-export MERRITTUSER=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-prod/user-ro --query Parameter.Value --output text)
-export MERRITTPASS=$(aws ssm get-parameter --name /uc3/mrt/dev/integ-tests/for-prod/password-ro --with-decryption --query Parameter.Value --output text)
-locust
-```
-
-Login: 2.8 / 15.0
-Choose: 1.7 / 15.0
-
-## Tasks
-
-- Count failures
-- Generate 70pct time
-- Generate ??
-- Test times against standard
-    - Login
-    - Search
-    - Browse
-- Is there a way to categorize the requests?
+## Automated Builds
+See the [buildspec.yml](buildspec.yml) for an example of a scripted execution of this tool.

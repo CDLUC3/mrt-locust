@@ -1,6 +1,7 @@
 from locust import HttpUser, task
 from bs4 import BeautifulSoup
 import os
+import urllib.parse
 
 class HelloWorldUser(HttpUser):
     @task
@@ -12,15 +13,15 @@ class HelloWorldUser(HttpUser):
     def navigation(self):
         self.client.get("/")
         self.client.get("/home/choose_collection")
-        if "MERRITTUSER" in os.environ:
-          self.client.get("/m/merritt_demo")
-          self.client.get("/s/merritt_demo?terms=apple&group=merritt_demo&commit=Go")
-          self.client.get("/m/ark%253A%252F99999%252Ffk4fv08g3k")
-          self.client.get("/m/ark%253A%252F99999%252Ffk4fv08g3k/1")
-          self.client.get("/api/presign-file/ark%253A%252F99999%252Ffk4fv08g3k/1/system%252Fmrt-erc.txt")
-        else: 
-          self.client.get("/m/merritt_demo_pub")
-          self.client.get("/s/merritt_demo_pub?terms=apple&group=merritt_demo_pub&commit=Go")
+        self.client.get("/m/{}".format(os.environ["MNEMONIC"]))
+        self.client.get("/s/{}?terms=apple&group={}&commit=Go".format(os.environ["MNEMONIC"], os.environ["MNEMONIC"]))
+        for ark in os.environ["ARKS"].split(","):
+          arkenc = urllib.parse.quote_plus(ark)
+          file = "system/mrt-erc.txt"
+          fileenc = urllib.parse.quote_plus(file)
+          self.client.get("/m/{}".format(arkenc))
+          self.client.get("/m/{}/1".format(arkenc))
+          self.client.get("/api/presign-file/{}/1/{}".format(arkenc, fileenc))
 
     def on_start(self):
         #the following does not work with rails CSRF protection
