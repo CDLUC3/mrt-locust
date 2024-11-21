@@ -44,10 +44,7 @@ phases:
       echo
       echo "Run 2 minute locust test"
       locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
-      cat out.json
       echo 
-      echo "================"
-      echo
       cut -d, -f2,3,4,15 out.csv_stats.csv
 
     - | 
@@ -66,7 +63,7 @@ phases:
       echo "Analyze 80th percentile response times"
       echo
       # See https://github.com/CDLUC3/mrt-locust/blob/main/sample.md for an explanation of this jq command
-      jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8 -1])}]" out.json > out80.json
+      jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8])}]" out.json > out80.json
       cat out80.json
 
     - |
