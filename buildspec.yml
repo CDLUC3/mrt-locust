@@ -60,14 +60,14 @@ phases:
 
     - |
       echo; echo; echo " === Test for login response times greater than #{MS_LOGIN}ms... fail if file is not empty"; echo
-      jq ".[] | select(.resp_ms_80pct > $MS_LOGIN) | select(.name==\"/guest_login\")" out80.json > out.test.txt
+      jq ".[] | select(.resp_ms_80pct > $MS_LOGIN) | select(.name | test(\"login\$\"))" out80.json > out.test.txt
       ls -l out.test.txt
       cat out.test.txt
       if [ -s out.test.txt ]; then echo " ** FAIL login reposonse time"; false; fi
 
     - |
       echo; echo; echo " === Test for response times greater than ${MS_RESP}ms... fail if file is not empty"; echo
-      jq ".[] | select(.resp_ms_80pct > $MS_RESP) | select(.name!=\"/guest_login\")" out80.json > out.test.txt
+      jq ".[] | select(.resp_ms_80pct > $MS_RESP) | select(.name | test(\"login\$\") | not)" out80.json > out.test.txt
       ls -l out.test.txt
       cat out.test.txt
       if [ -s out.test.txt ]; then echo " ** FAIL response time"; false; fi
