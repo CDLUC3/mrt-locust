@@ -26,9 +26,9 @@ phases:
       if [ -s fail.json ]; then false; fi
 
       echo "Test for login response times greater than 8 seconds... fail if file is not empty"
-      jq '. | select(.resp_ms_80pct > 8000) | select(.name=="/guest_login")' out80.json > out.test.json
+      jq '[. | select(.resp_ms_80pct > 8000) | select(.name=="/guest_login")]' out80.json > out.test.json
       if [ -s out.test.json ]; then false; fi
 
       echo "Test for response times greater than 2 seconds... fail if file is not empty"
-      jq '. | select(.resp_ms_80pct > 2000) | select(.name!="/guest_login")' out80.json > out.test.json
+      jq '[. | select(.resp_ms_80pct > 2000) | select(.name!="/guest_login")]' out80.json > out.test.json
       if [ -s out.test.json ]; then false; fi
