@@ -15,7 +15,7 @@ class HelloWorldUser(HttpUser):
         self.client.get("/home/choose_collection")
         self.client.get("/m/{}".format(os.environ["MNEMONIC"]))
         self.client.get("/s/{}?terms=apple&group={}&commit=Go".format(os.environ["MNEMONIC"], os.environ["MNEMONIC"]))
-        for ark in os.environ["ARKS"].split(","):
+        for ark in os.environ["TESTARKS"].split(","):
           arkenc = urllib.parse.quote_plus(ark)
           file = "system/mrt-erc.txt"
           fileenc = urllib.parse.quote_plus(file)
