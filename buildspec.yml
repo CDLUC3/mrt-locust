@@ -38,56 +38,40 @@ phases:
         export TESTARKS=$ARKLIST
       fi
 
+      header() {
+        echo 
+        echo "================"
+        echo
+        echo "$1"
+        echo
+      }
+
     - |
-      echo 
-      echo "================"
-      echo
-      echo "Run 2 minute locust test"
+      header "Run 2 minute locust test"
       locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
-      echo 
       cut -d, -f2,3,4,15 out.csv_stats.csv
 
     - | 
-      echo 
-      echo "================"
-      echo
-      echo "Analyze Failures"
-      echo
+      header "Analyze Failures"
       jq ".[] | select(.num_failures>0) | {name: .name, fail: .num_failures}" out.json > fail.json
       cat fail.json
       
     - |
-      echo 
-      echo "================"
-      echo
-      echo "Analyze 80th percentile response times"
-      echo
+      header "Analyze 80th percentile response times"
       # See https://github.com/CDLUC3/mrt-locust/blob/main/sample.md for an explanation of this jq command
       jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8])}]" out.json > out80.json
       cat out80.json
 
     - |
-      echo 
-      echo "================"
-      echo
-      echo "Test for failure... fail if file is not empty"
-      echo
+      header "Test for failure... fail if file is not empty"
       if [ -s fail.json ]; then echo FAILURE found; false; fi
 
     - |
-      echo 
-      echo "================"
-      echo
-      echo "Test for login response times greater than 8 seconds... fail if file is not empty"
-      echo
+      header "Test for login response times greater than 8 seconds... fail if file is not empty"
       jq ".[] | select(.resp_ms_80pct > $MS_LOGIN) | select(.name==\"/guest_login\")" out80.json > out.test.json
       if [ -s out.test.json ]; then echo FAIL login reposonse time; false; fi
 
     - |
-      echo 
-      echo "================"
-      echo
-      echo "Test for response times greater than 2 seconds... fail if file is not empty"
-      echo
+      header "Test for response times greater than 2 seconds... fail if file is not empty"
       jq ".[] | select(.resp_ms_80pct > $MS_RESP) | select(.name!=\"/guest_login\")" out80.json > out.test.json
       if [ -s out.test.json ]; then echo FAIL response time; false; fi
