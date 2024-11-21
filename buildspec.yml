@@ -9,9 +9,6 @@ phases:
       pip -q install locust
       pip -q install bs4
 
-      MS_LOGIN=8000
-      MS_GENERAL=2000
-
       if [[ "$LOCUST_TEST_ENV" == "production" ]]
       then
         MERRITTURL=https://merritt.cdlib.org
@@ -44,12 +41,12 @@ phases:
       cat out80.json
 
       echo "Test for failure... fail if file is not empty"
-      if [ -s fail.json ]; then false; fi
+      if [ -s fail.json ]; then echo FAILURE found; false; fi
 
       echo "Test for login response times greater than 8 seconds... fail if file is not empty"
-      jq '[. | select(.resp_ms_80pct > ${MS_LOGIN}) | select(.name=="/guest_login")]' out80.json > out.test.json
-      if [ -s out.test.json ]; then false; fi
+      jq '[. | select(.resp_ms_80pct > 8000) | select(.name=="/guest_login")]' out80.json > out.test.json
+      if [ -s out.test.json ]; then echo FAIL login reposonse time; false; fi
 
       echo "Test for response times greater than 2 seconds... fail if file is not empty"
-      jq '[. | select(.resp_ms_80pct > ${MS_GENERAL}) | select(.name!="/guest_login")]' out80.json > out.test.json
-      if [ -s out.test.json ]; then false; fi
+      jq '[. | select(.resp_ms_80pct > 2000) | select(.name!="/guest_login")]' out80.json > out.test.json
+      if [ -s out.test.json ]; then echo FAIL response time; false; fi
