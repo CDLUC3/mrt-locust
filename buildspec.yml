@@ -46,6 +46,13 @@ phases:
         echo
       }
 
+      fail() {
+        echo 
+        echo " ** $1"
+        echo
+        false
+      }
+
     - |
       header "Run 2 minute locust test"
       locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
@@ -64,14 +71,14 @@ phases:
 
     - |
       header "Test for failure... fail if file is not empty"
-      if [ -s fail.json ]; then echo FAILURE found; false; fi
+      if [ -s fail.json ]; then fail "FAILURE found"; fi
 
     - |
-      header "Test for login response times greater than 8 seconds... fail if file is not empty"
+      header "Test for login response times greater than #{MS_LOGIN}ms... fail if file is not empty"
       jq ".[] | select(.resp_ms_80pct > $MS_LOGIN) | select(.name==\"/guest_login\")" out80.json > out.test.json
-      if [ -s out.test.json ]; then echo FAIL login reposonse time; false; fi
+      if [ -s out.test.json ]; then fail "FAIL login reposonse time"; fi
 
     - |
-      header "Test for response times greater than 2 seconds... fail if file is not empty"
+      header "Test for response times greater than ${MS_RESP}ms... fail if file is not empty"
       jq ".[] | select(.resp_ms_80pct > $MS_RESP) | select(.name!=\"/guest_login\")" out80.json > out.test.json
-      if [ -s out.test.json ]; then echo FAIL response time; false; fi
+      if [ -s out.test.json ]; then fail "FAIL response time"; fi
