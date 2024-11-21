@@ -22,13 +22,13 @@ phases:
       jq "[.[] | {name: .name, resp_ms_80pct: (.response_times | (. as \$s | [([(keys[] as \$k | (\$k | tonumber))] | sort_by(.)) | .[] as \$v | range(\$s[\$v|tostring]) | \$v]) as \$vals | \$vals[(\$vals | length) * .8 -1])}]" out.json > out80.json
       cat out80.json
 
-    - echo "Test for failure... fail if file is not empty"
-    - if [ -s fail.json ]; then false; fi
+      echo "Test for failure... fail if file is not empty"
+      if [ -s fail.json ]; then false; fi
 
-    - echo "Test for login response times greater than 8 seconds... fail if file is not empty"
-    - jq '. | select(.resp_ms_80pct > 8000) | select(.name=="/guest_login")' out80.json > out.test.json
-    - if [ -s out.test.json ]; then false; fi
+      echo "Test for login response times greater than 8 seconds... fail if file is not empty"
+      jq '. | select(.resp_ms_80pct > 8000) | select(.name=="/guest_login")' out80.json > out.test.json
+      if [ -s out.test.json ]; then false; fi
 
-    - echo "Test for response times greater than 2 seconds... fail if file is not empty"
-    - jq '. | select(.resp_ms_80pct > 2000) | select(.name!="/guest_login")' out80.json > out.test.json
-    - if [ -s out.test.json ]; then false; fi
+      echo "Test for response times greater than 2 seconds... fail if file is not empty"
+      jq '. | select(.resp_ms_80pct > 2000) | select(.name!="/guest_login")' out80.json > out.test.json
+      if [ -s out.test.json ]; then false; fi
