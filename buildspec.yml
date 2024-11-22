@@ -8,6 +8,9 @@ phases:
     - |
       pip -q install locust
       pip -q install bs4
+      ls 
+      pwd 
+      env
       source config.sh
 
     - |
