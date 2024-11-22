@@ -8,10 +8,7 @@ phases:
     - |
       pip -q install locust
       pip -q install bs4
-      ls 
-      pwd 
-      env
-      source config.sh
+      source ./config.sh
 
     - |
       echo; echo; echo " === Run 2 minute locust test"; echo
