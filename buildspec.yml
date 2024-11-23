@@ -11,7 +11,7 @@ phases:
       source ./config.sh
 
     - |
-      echo; echo; echo " === Run 2 minute locust test"; echo
+      echo; echo; echo " === Run ${DURATION} locust test"; echo
       locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
       cut -d, -f2,3,4,10,15 out.csv_stats.csv
 
