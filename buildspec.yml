@@ -13,7 +13,7 @@ phases:
     - |
       echo; echo; echo " === Run 2 minute locust test"; echo
       locust --headless -u ${USERCOUNT} -t ${DURATION} -H $MERRITTURL --only-summary -L ERROR --csv out.csv --reset-stats --json > out.json
-      cut -d, -f2,3,4,15 out.csv_stats.csv
+      cut -d, -f2,3,4,9,15 out.csv_stats.csv
 
     - | 
       echo; echo; echo " === Analyze Failures"; echo
