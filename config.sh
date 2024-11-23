@@ -31,3 +31,9 @@ else
   export MNEMONIC=merritt_demo
   export TESTARKS=$ARKLIST
 fi
+
+if [[ "$LOCUST_MODE" == "long" ]]
+then
+  USERCOUNT=$((USERCOUNT * 3))
+  DURATION=10m
+fi
