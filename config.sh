@@ -1,7 +1,7 @@
 # Need to investigate why login time can be so high
 MS_LOGIN=60000
 MS_RESP=2000
-DURATION=2m
+DURATION=3m
 
 if [[ "$LOCUST_TEST_ENV" == "production" ]]
 then
