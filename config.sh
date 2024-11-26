@@ -1,4 +1,5 @@
-MS_LOGIN=8000
+# Need to investigate why login time can be so high
+MS_LOGIN=60000
 MS_RESP=2000
 DURATION=2m
 
@@ -18,7 +19,8 @@ else
   MERRITTURL=https://merritt-stage.cdlib.org
   SSMPATH=/uc3/mrt/dev/integ-tests/for-stage
   USERCOUNT=6
-  ARKLIST=ark:/99999/fk4fv08g3k
+  # stage arks are purged weekly
+  ARKLIST=
 fi
 
 if [[ "$LOCUST_MODE" == "readonly" ]]
