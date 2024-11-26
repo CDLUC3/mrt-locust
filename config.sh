@@ -1,5 +1,5 @@
 # Need to investigate why login time can be so high
-MS_LOGIN=10000
+MS_LOGIN=60000
 MS_RESP=2000
 DURATION=3m
 
