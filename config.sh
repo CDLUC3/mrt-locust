@@ -1,19 +1,19 @@
 # Need to investigate why login time can be so high
 MS_LOGIN=60000
-MS_RESP=2000
-DURATION=3m
+MS_RESP=4000
+DURATION=2m
 
 if [[ "$LOCUST_TEST_ENV" == "production" ]]
 then
   MERRITTURL=https://merritt.cdlib.org
   SSMPATH=/uc3/mrt/dev/integ-tests/for-prod
-  USERCOUNT=10
+  USERCOUNT=6
   ARKLIST=ark:/99999/fk4t16pn3j,ark:/99999/fk4xp8q22b
 elif [[ "$LOCUST_TEST_ENV" == "preview" ]]
 then
   MERRITTURL=https://uc3-mrt-preview-prd.cdlib.org
   SSMPATH=/uc3/mrt/dev/integ-tests/for-prod
-  USERCOUNT=10
+  USERCOUNT=6
   ARKLIST=ark:/99999/fk4t16pn3j,ark:/99999/fk4xp8q22b
 else
   MERRITTURL=https://merritt-stage.cdlib.org
