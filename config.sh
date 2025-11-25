@@ -19,6 +19,7 @@ else
   MERRITTURL=https://merritt-stage.cdlib.org
   SSMPATH=/uc3/mrt/dev/integ-tests/for-stage
   USERCOUNT=6
+  MS_RESP=5000
   # stage arks are purged weekly
   ARKLIST=
 fi
